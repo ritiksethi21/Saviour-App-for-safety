@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>DataParser.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.ln { color: #606366; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DataParser.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com.example.driversafety</span><span class="s0">;</span>
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.MarkerOptions</span><span class="s0">;</span>
+<a name="l4"><span class="ln">4    </span></a>
+<a name="l5"><span class="ln">5    </span></a><span class="s0">import </span><span class="s1">org.json.JSONArray</span><span class="s0">;</span>
+<a name="l6"><span class="ln">6    </span></a><span class="s0">import </span><span class="s1">org.json.JSONException</span><span class="s0">;</span>
+<a name="l7"><span class="ln">7    </span></a><span class="s0">import </span><span class="s1">org.json.JSONObject</span><span class="s0">;</span>
+<a name="l8"><span class="ln">8    </span></a>
+<a name="l9"><span class="ln">9    </span></a><span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<a name="l10"><span class="ln">10   </span></a><span class="s0">import </span><span class="s1">java.util.HashMap</span><span class="s0">;</span>
+<a name="l11"><span class="ln">11   </span></a><span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<a name="l12"><span class="ln">12   </span></a>
+<a name="l13"><span class="ln">13   </span></a><span class="s0">public class </span><span class="s1">DataParser {</span>
+<a name="l14"><span class="ln">14   </span></a>    <span class="s0">private </span><span class="s1">HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;getSingleNearbyPlace(JSONObject googlePlaceJSON)</span>
+<a name="l15"><span class="ln">15   </span></a>    <span class="s1">{</span>
+<a name="l16"><span class="ln">16   </span></a>        <span class="s1">HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;goolePlaceMap=</span><span class="s0">new </span><span class="s1">HashMap&lt;&gt;()</span><span class="s0">;</span>
+<a name="l17"><span class="ln">17   </span></a>        <span class="s1">String NameOfPlace=</span><span class="s2">&quot;-NA-&quot;</span><span class="s0">;</span>
+<a name="l18"><span class="ln">18   </span></a>        <span class="s1">String vicinity=</span><span class="s2">&quot;-NA-&quot;</span><span class="s0">;</span>
+<a name="l19"><span class="ln">19   </span></a>        <span class="s1">String latitude=</span><span class="s2">&quot;&quot;</span><span class="s0">;</span>
+<a name="l20"><span class="ln">20   </span></a>        <span class="s1">String longitude=</span><span class="s2">&quot;&quot;</span><span class="s0">;</span>
+<a name="l21"><span class="ln">21   </span></a>        <span class="s1">String reference=</span><span class="s2">&quot;&quot;</span><span class="s0">;</span>
+<a name="l22"><span class="ln">22   </span></a>        <span class="s0">try </span><span class="s1">{</span>
+<a name="l23"><span class="ln">23   </span></a>            <span class="s0">if</span><span class="s1">(!googlePlaceJSON.isNull(</span><span class="s2">&quot;name&quot;</span><span class="s1">))</span>
+<a name="l24"><span class="ln">24   </span></a>            <span class="s1">{</span>
+<a name="l25"><span class="ln">25   </span></a>                <span class="s1">NameOfPlace=googlePlaceJSON.getString(</span><span class="s2">&quot;name&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l26"><span class="ln">26   </span></a>            <span class="s1">}</span>
+<a name="l27"><span class="ln">27   </span></a>            <span class="s0">if</span><span class="s1">(!googlePlaceJSON.isNull(</span><span class="s2">&quot;vicinity&quot;</span><span class="s1">))</span>
+<a name="l28"><span class="ln">28   </span></a>            <span class="s1">{</span>
+<a name="l29"><span class="ln">29   </span></a>                <span class="s1">vicinity=googlePlaceJSON.getString(</span><span class="s2">&quot;vicinity&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l30"><span class="ln">30   </span></a>            <span class="s1">}</span>
+<a name="l31"><span class="ln">31   </span></a>            <span class="s1">latitude=googlePlaceJSON.getJSONObject(</span><span class="s2">&quot;geometry&quot;</span><span class="s1">).getJSONObject(</span><span class="s2">&quot;location&quot;</span><span class="s1">).getString(</span><span class="s2">&quot;lat&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l32"><span class="ln">32   </span></a>            <span class="s1">longitude=googlePlaceJSON.getJSONObject(</span><span class="s2">&quot;geometry&quot;</span><span class="s1">).getJSONObject(</span><span class="s2">&quot;location&quot;</span><span class="s1">).getString(</span><span class="s2">&quot;lng&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l33"><span class="ln">33   </span></a>            <span class="s1">reference=googlePlaceJSON.getString(</span><span class="s2">&quot;reference&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l34"><span class="ln">34   </span></a>
+<a name="l35"><span class="ln">35   </span></a>            <span class="s1">goolePlaceMap.put(</span><span class="s2">&quot;place_name&quot;</span><span class="s0">,</span><span class="s1">NameOfPlace)</span><span class="s0">;</span>
+<a name="l36"><span class="ln">36   </span></a>            <span class="s1">goolePlaceMap.put(</span><span class="s2">&quot;vicinity&quot;</span><span class="s0">,</span><span class="s1">vicinity)</span><span class="s0">;</span>
+<a name="l37"><span class="ln">37   </span></a>            <span class="s1">goolePlaceMap.put(</span><span class="s2">&quot;lat&quot;</span><span class="s0">,</span><span class="s1">latitude)</span><span class="s0">;</span>
+<a name="l38"><span class="ln">38   </span></a>            <span class="s1">goolePlaceMap.put(</span><span class="s2">&quot;lng&quot;</span><span class="s0">,</span><span class="s1">longitude)</span><span class="s0">;</span>
+<a name="l39"><span class="ln">39   </span></a>            <span class="s1">goolePlaceMap.put(</span><span class="s2">&quot;reference&quot;</span><span class="s0">,</span><span class="s1">reference)</span><span class="s0">;</span>
+<a name="l40"><span class="ln">40   </span></a>
+<a name="l41"><span class="ln">41   </span></a>
+<a name="l42"><span class="ln">42   </span></a>        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(JSONException e) {</span>
+<a name="l43"><span class="ln">43   </span></a>            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+<a name="l44"><span class="ln">44   </span></a>        <span class="s1">}</span>
+<a name="l45"><span class="ln">45   </span></a>           <span class="s0">return </span><span class="s1">goolePlaceMap</span><span class="s0">;</span>
+<a name="l46"><span class="ln">46   </span></a>    <span class="s1">}</span>
+<a name="l47"><span class="ln">47   </span></a>    <span class="s0">private </span><span class="s1">List&lt;HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;&gt; getAllNearbyPlaces(JSONArray jsonArray)</span>
+<a name="l48"><span class="ln">48   </span></a>    <span class="s1">{</span>
+<a name="l49"><span class="ln">49   </span></a>        <span class="s0">int </span><span class="s1">counter=jsonArray.length()</span><span class="s0">;</span>
+<a name="l50"><span class="ln">50   </span></a>        <span class="s1">List&lt;HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;&gt;NearbyPlaceList=</span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+<a name="l51"><span class="ln">51   </span></a>        <span class="s1">HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;NearbyPlaceMap=</span><span class="s0">null;</span>
+<a name="l52"><span class="ln">52   </span></a>
+<a name="l53"><span class="ln">53   </span></a>        <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">0</span><span class="s0">;</span><span class="s1">i&lt;counter</span><span class="s0">;</span><span class="s1">i++)</span>
+<a name="l54"><span class="ln">54   </span></a>        <span class="s1">{</span>
+<a name="l55"><span class="ln">55   </span></a>            <span class="s0">try </span><span class="s1">{</span>
+<a name="l56"><span class="ln">56   </span></a>                <span class="s1">NearbyPlaceMap =getSingleNearbyPlace((JSONObject)jsonArray.get(i))</span><span class="s0">;</span>
+<a name="l57"><span class="ln">57   </span></a>                <span class="s1">NearbyPlaceList.add(NearbyPlaceMap)</span><span class="s0">;</span>
+<a name="l58"><span class="ln">58   </span></a>            <span class="s1">} </span><span class="s0">catch </span><span class="s1">(JSONException e) {</span>
+<a name="l59"><span class="ln">59   </span></a>                <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+<a name="l60"><span class="ln">60   </span></a>            <span class="s1">}</span>
+<a name="l61"><span class="ln">61   </span></a>        <span class="s1">}</span>
+<a name="l62"><span class="ln">62   </span></a>        <span class="s0">return </span><span class="s1">NearbyPlaceList</span><span class="s0">;</span>
+<a name="l63"><span class="ln">63   </span></a>    <span class="s1">}</span>
+<a name="l64"><span class="ln">64   </span></a>    <span class="s0">public </span><span class="s1">List&lt;HashMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt;&gt;parse(String jsonData)</span>
+<a name="l65"><span class="ln">65   </span></a>    <span class="s1">{</span>
+<a name="l66"><span class="ln">66   </span></a>        <span class="s1">JSONArray jsonArray=</span><span class="s0">null;</span>
+<a name="l67"><span class="ln">67   </span></a>        <span class="s1">JSONObject jsonObject</span><span class="s0">;</span>
+<a name="l68"><span class="ln">68   </span></a>
+<a name="l69"><span class="ln">69   </span></a>        <span class="s0">try </span><span class="s1">{</span>
+<a name="l70"><span class="ln">70   </span></a>            <span class="s1">jsonObject=</span><span class="s0">new </span><span class="s1">JSONObject(jsonData)</span><span class="s0">;</span>
+<a name="l71"><span class="ln">71   </span></a>            <span class="s1">jsonArray=jsonObject.getJSONArray(</span><span class="s2">&quot;results&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l72"><span class="ln">72   </span></a>        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(JSONException e) {</span>
+<a name="l73"><span class="ln">73   </span></a>            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+<a name="l74"><span class="ln">74   </span></a>        <span class="s1">}</span>
+<a name="l75"><span class="ln">75   </span></a>        <span class="s0">return </span><span class="s1">getAllNearbyPlaces(jsonArray)</span><span class="s0">;</span>
+<a name="l76"><span class="ln">76   </span></a>    <span class="s1">}</span>
+<a name="l77"><span class="ln">77   </span></a>
+<a name="l78"><span class="ln">78   </span></a><span class="s1">}</span>
+<a name="l79"><span class="ln">79   </span></a></pre>
+</body>
+</html>
