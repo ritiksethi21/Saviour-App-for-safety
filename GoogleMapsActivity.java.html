@@ -1,0 +1,229 @@
+<html>
+<head>
+<title>GoogleMapsActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+.ln { color: #606366; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GoogleMapsActivity.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com.example.driversafety</span><span class="s0">;</span>
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s0">import </span><span class="s1">androidx.annotation.NonNull</span><span class="s0">;</span>
+<a name="l4"><span class="ln">4    </span></a><span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<a name="l5"><span class="ln">5    </span></a><span class="s0">import </span><span class="s1">androidx.core.app.ActivityCompat</span><span class="s0">;</span>
+<a name="l6"><span class="ln">6    </span></a><span class="s0">import </span><span class="s1">androidx.core.content.ContextCompat</span><span class="s0">;</span>
+<a name="l7"><span class="ln">7    </span></a><span class="s0">import </span><span class="s1">androidx.fragment.app.FragmentActivity</span><span class="s0">;</span>
+<a name="l8"><span class="ln">8    </span></a>
+<a name="l9"><span class="ln">9    </span></a><span class="s0">import </span><span class="s1">android.Manifest</span><span class="s0">;</span>
+<a name="l10"><span class="ln">10   </span></a><span class="s0">import </span><span class="s1">android.content.pm.PackageManager</span><span class="s0">;</span>
+<a name="l11"><span class="ln">11   </span></a><span class="s0">import </span><span class="s1">android.location.Location</span><span class="s0">;</span>
+<a name="l12"><span class="ln">12   </span></a><span class="s0">import </span><span class="s1">android.os.Build</span><span class="s0">;</span>
+<a name="l13"><span class="ln">13   </span></a><span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<a name="l14"><span class="ln">14   </span></a><span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+<a name="l15"><span class="ln">15   </span></a><span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<a name="l16"><span class="ln">16   </span></a><span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+<a name="l17"><span class="ln">17   </span></a>
+<a name="l18"><span class="ln">18   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.common.ConnectionResult</span><span class="s0">;</span>
+<a name="l19"><span class="ln">19   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.common.api.Api</span><span class="s0">;</span>
+<a name="l20"><span class="ln">20   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.common.api.PendingResult</span><span class="s0">;</span>
+<a name="l21"><span class="ln">21   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.common.api.Status</span><span class="s0">;</span>
+<a name="l22"><span class="ln">22   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationListener</span><span class="s0">;</span>
+<a name="l23"><span class="ln">23   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.common.api.GoogleApiClient</span><span class="s0">;</span>
+<a name="l24"><span class="ln">24   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationRequest</span><span class="s0">;</span>
+<a name="l25"><span class="ln">25   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationServices</span><span class="s0">;</span>
+<a name="l26"><span class="ln">26   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.CameraUpdateFactory</span><span class="s0">;</span>
+<a name="l27"><span class="ln">27   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.GoogleMap</span><span class="s0">;</span>
+<a name="l28"><span class="ln">28   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.OnMapReadyCallback</span><span class="s0">;</span>
+<a name="l29"><span class="ln">29   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.SupportMapFragment</span><span class="s0">;</span>
+<a name="l30"><span class="ln">30   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.BitmapDescriptor</span><span class="s0">;</span>
+<a name="l31"><span class="ln">31   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.BitmapDescriptorFactory</span><span class="s0">;</span>
+<a name="l32"><span class="ln">32   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.LatLng</span><span class="s0">;</span>
+<a name="l33"><span class="ln">33   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.Marker</span><span class="s0">;</span>
+<a name="l34"><span class="ln">34   </span></a><span class="s0">import </span><span class="s1">com.google.android.gms.maps.model.MarkerOptions</span><span class="s0">;</span>
+<a name="l35"><span class="ln">35   </span></a>
+<a name="l36"><span class="ln">36   </span></a><span class="s0">import </span><span class="s1">java.io.FileDescriptor</span><span class="s0">;</span>
+<a name="l37"><span class="ln">37   </span></a><span class="s0">import </span><span class="s1">java.io.PrintWriter</span><span class="s0">;</span>
+<a name="l38"><span class="ln">38   </span></a><span class="s0">import </span><span class="s1">java.util.concurrent.TimeUnit</span><span class="s0">;</span>
+<a name="l39"><span class="ln">39   </span></a>
+<a name="l40"><span class="ln">40   </span></a><span class="s0">public class </span><span class="s1">GoogleMapsActivity </span><span class="s0">extends </span><span class="s1">FragmentActivity </span><span class="s0">implements </span><span class="s1">OnMapReadyCallback</span><span class="s0">, </span><span class="s1">GoogleApiClient.ConnectionCallbacks</span><span class="s0">,</span>
+<a name="l41"><span class="ln">41   </span></a>        <span class="s1">GoogleApiClient.OnConnectionFailedListener</span><span class="s0">, </span><span class="s1">LocationListener {</span>
+<a name="l42"><span class="ln">42   </span></a>
+<a name="l43"><span class="ln">43   </span></a>
+<a name="l44"><span class="ln">44   </span></a>    <span class="s0">private </span><span class="s1">GoogleMap mMap</span><span class="s0">;</span>
+<a name="l45"><span class="ln">45   </span></a>     <span class="s0">private </span><span class="s1">GoogleApiClient googleApiClient</span><span class="s0">;</span>
+<a name="l46"><span class="ln">46   </span></a>     <span class="s0">private </span><span class="s1">LocationRequest locationRequest</span><span class="s0">;</span>
+<a name="l47"><span class="ln">47   </span></a>     <span class="s0">private  </span><span class="s1">Location lastLocation</span><span class="s0">;</span>
+<a name="l48"><span class="ln">48   </span></a>     <span class="s0">private </span><span class="s1">Marker currentUserLocationMarker</span><span class="s0">;</span>
+<a name="l49"><span class="ln">49   </span></a>     <span class="s0">private  static final int </span><span class="s1">Request_User_Location__Code=</span><span class="s2">99</span><span class="s0">;</span>
+<a name="l50"><span class="ln">50   </span></a>    <span class="s0">private double </span><span class="s1">latitude</span><span class="s0">,</span><span class="s1">longitude</span><span class="s0">;</span>
+<a name="l51"><span class="ln">51   </span></a>    <span class="s0">private int </span><span class="s1">ProximityRadius=</span><span class="s2">10000</span><span class="s0">;</span>
+<a name="l52"><span class="ln">52   </span></a>    <span class="s1">@Override</span>
+<a name="l53"><span class="ln">53   </span></a>    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+<a name="l54"><span class="ln">54   </span></a>        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+<a name="l55"><span class="ln">55   </span></a>        <span class="s1">setContentView(R.layout.activity_google_maps)</span><span class="s0">;</span>
+<a name="l56"><span class="ln">56   </span></a>
+<a name="l57"><span class="ln">57   </span></a>        <span class="s0">if</span><span class="s1">(Build.VERSION.SDK_INT&gt;=Build.VERSION_CODES.M)</span>
+<a name="l58"><span class="ln">58   </span></a>        <span class="s1">{</span>
+<a name="l59"><span class="ln">59   </span></a>            <span class="s1">checkUserLocationPermission()</span><span class="s0">;</span>
+<a name="l60"><span class="ln">60   </span></a>        <span class="s1">}</span>
+<a name="l61"><span class="ln">61   </span></a>        <span class="s3">// Obtain the SupportMapFragment and get notified when the map is ready to be used.</span>
+<a name="l62"><span class="ln">62   </span></a>        <span class="s1">SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()</span>
+<a name="l63"><span class="ln">63   </span></a>                <span class="s1">.findFragmentById(R.id.map)</span><span class="s0">;</span>
+<a name="l64"><span class="ln">64   </span></a>        <span class="s1">mapFragment.getMapAsync(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l65"><span class="ln">65   </span></a>
+<a name="l66"><span class="ln">66   </span></a>    <span class="s1">}</span>
+<a name="l67"><span class="ln">67   </span></a>    <span class="s0">public void </span><span class="s1">onClick(View v)</span>
+<a name="l68"><span class="ln">68   </span></a>    <span class="s1">{</span>
+<a name="l69"><span class="ln">69   </span></a>        <span class="s1">String hospital=</span><span class="s4">&quot;hospital&quot;</span><span class="s0">;</span>
+<a name="l70"><span class="ln">70   </span></a>        <span class="s1">Object transferData[]=</span><span class="s0">new </span><span class="s1">Object[</span><span class="s2">2</span><span class="s1">]</span><span class="s0">;</span>
+<a name="l71"><span class="ln">71   </span></a>        <a href="GetNearByPlaces.java.html">GetNearByPlaces</a> <span class="s1">getNearByPlaces=</span><span class="s0">new <a href="GetNearByPlaces.java.html">GetNearByPlaces</a></span><span class="s1">()</span><span class="s0">;</span>
+<a name="l72"><span class="ln">72   </span></a>        <span class="s1">mMap.clear()</span><span class="s0">;</span>
+<a name="l73"><span class="ln">73   </span></a>        <span class="s1">String url=getUrl(latitude</span><span class="s0">,</span><span class="s1">longitude</span><span class="s0">,</span><span class="s1">hospital)</span><span class="s0">;</span>
+<a name="l74"><span class="ln">74   </span></a>        <span class="s1">transferData[</span><span class="s2">0</span><span class="s1">]=mMap</span><span class="s0">;</span>
+<a name="l75"><span class="ln">75   </span></a>        <span class="s1">transferData[</span><span class="s2">1</span><span class="s1">]=url</span><span class="s0">;</span>
+<a name="l76"><span class="ln">76   </span></a>        <span class="s1">getNearByPlaces.execute(transferData)</span><span class="s0">;</span>
+<a name="l77"><span class="ln">77   </span></a>        <span class="s1">Toast.makeText(</span><span class="s0">this,</span><span class="s4">&quot;Searching for Nearby Hospitals&quot;</span><span class="s0">,</span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+<a name="l78"><span class="ln">78   </span></a>    <span class="s1">}</span>
+<a name="l79"><span class="ln">79   </span></a>    <span class="s0">private </span><span class="s1">String getUrl(</span><span class="s0">double </span><span class="s1">latitude</span><span class="s0">,double </span><span class="s1">longitude</span><span class="s0">,</span><span class="s1">String nearbyPlace)</span>
+<a name="l80"><span class="ln">80   </span></a>    <span class="s1">{</span>
+<a name="l81"><span class="ln">81   </span></a>        <span class="s1">StringBuilder googleURL=</span><span class="s0">new </span><span class="s1">StringBuilder(</span><span class="s4">&quot;https://maps.googleapis.com/maps/api/place/nearbysearch/json?&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l82"><span class="ln">82   </span></a>        <span class="s1">googleURL.append(</span><span class="s4">&quot;location=&quot;</span><span class="s1">+latitude+</span><span class="s4">&quot;,&quot;</span><span class="s1">+longitude)</span><span class="s0">;</span>
+<a name="l83"><span class="ln">83   </span></a>        <span class="s1">googleURL.append(</span><span class="s4">&quot;&amp;radius=&quot;</span><span class="s1">+ProximityRadius)</span><span class="s0">;</span>
+<a name="l84"><span class="ln">84   </span></a>        <span class="s1">googleURL.append(</span><span class="s4">&quot;&amp;types=&quot;</span><span class="s1">+nearbyPlace)</span><span class="s0">;</span>
+<a name="l85"><span class="ln">85   </span></a>        <span class="s1">googleURL.append(</span><span class="s4">&quot;&amp;key=&quot;</span><span class="s1">+</span><span class="s4">&quot;AIzaSyAvo_A1UTX3h4_pcOKkrqmbAQcJtWFGSaw&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l86"><span class="ln">86   </span></a>        <span class="s1">Log.d(</span><span class="s4">&quot;GoogleMapsActivity&quot;</span><span class="s0">,</span><span class="s4">&quot;url= &quot;</span><span class="s1">+ googleURL.toString())</span><span class="s0">;</span>
+<a name="l87"><span class="ln">87   </span></a>        <span class="s0">return </span><span class="s1">googleURL.toString()</span><span class="s0">;</span>
+<a name="l88"><span class="ln">88   </span></a>
+<a name="l89"><span class="ln">89   </span></a>    <span class="s1">}</span>
+<a name="l90"><span class="ln">90   </span></a>
+<a name="l91"><span class="ln">91   </span></a>    <span class="s1">@Override</span>
+<a name="l92"><span class="ln">92   </span></a>    <span class="s0">public void </span><span class="s1">onMapReady(GoogleMap googleMap) {</span>
+<a name="l93"><span class="ln">93   </span></a>        <span class="s1">mMap = googleMap</span><span class="s0">;</span>
+<a name="l94"><span class="ln">94   </span></a>        <span class="s0">if</span><span class="s1">(ContextCompat.checkSelfPermission(</span><span class="s0">this,</span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)</span>
+<a name="l95"><span class="ln">95   </span></a>        <span class="s1">{</span>
+<a name="l96"><span class="ln">96   </span></a>
+<a name="l97"><span class="ln">97   </span></a>             <span class="s1">buildGoogleApiClient()</span><span class="s0">;</span>
+<a name="l98"><span class="ln">98   </span></a>            <span class="s1">mMap.setMyLocationEnabled(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l99"><span class="ln">99   </span></a>
+<a name="l100"><span class="ln">100  </span></a>        <span class="s1">}</span>
+<a name="l101"><span class="ln">101  </span></a>
+<a name="l102"><span class="ln">102  </span></a>
+<a name="l103"><span class="ln">103  </span></a>
+<a name="l104"><span class="ln">104  </span></a>    <span class="s1">}</span>
+<a name="l105"><span class="ln">105  </span></a>    <span class="s0">public boolean </span><span class="s1">checkUserLocationPermission()</span>
+<a name="l106"><span class="ln">106  </span></a>    <span class="s1">{</span>
+<a name="l107"><span class="ln">107  </span></a>        <span class="s0">if</span><span class="s1">(ContextCompat.checkSelfPermission(</span><span class="s0">this,</span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)</span>
+<a name="l108"><span class="ln">108  </span></a>        <span class="s1">{</span>
+<a name="l109"><span class="ln">109  </span></a>            <span class="s0">if</span><span class="s1">(ActivityCompat.shouldShowRequestPermissionRationale(</span><span class="s0">this,</span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION))</span>
+<a name="l110"><span class="ln">110  </span></a>            <span class="s1">{</span>
+<a name="l111"><span class="ln">111  </span></a>                <span class="s1">ActivityCompat.requestPermissions(</span><span class="s0">this,new </span><span class="s1">String[]{Manifest.permission.ACCESS_FINE_LOCATION}</span><span class="s0">,</span><span class="s1">Request_User_Location__Code)</span><span class="s0">;</span>
+<a name="l112"><span class="ln">112  </span></a>            <span class="s1">}</span>
+<a name="l113"><span class="ln">113  </span></a>            <span class="s0">else</span>
+<a name="l114"><span class="ln">114  </span></a>            <span class="s1">{</span>
+<a name="l115"><span class="ln">115  </span></a>                <span class="s1">ActivityCompat.requestPermissions(</span><span class="s0">this,new </span><span class="s1">String[]{Manifest.permission.ACCESS_FINE_LOCATION}</span><span class="s0">,</span><span class="s1">Request_User_Location__Code)</span><span class="s0">;</span>
+<a name="l116"><span class="ln">116  </span></a>            <span class="s1">}</span>
+<a name="l117"><span class="ln">117  </span></a>            <span class="s0">return false;</span>
+<a name="l118"><span class="ln">118  </span></a>        <span class="s1">}</span>
+<a name="l119"><span class="ln">119  </span></a>        <span class="s0">else</span>
+<a name="l120"><span class="ln">120  </span></a>        <span class="s1">{</span>
+<a name="l121"><span class="ln">121  </span></a>            <span class="s0">return true;</span>
+<a name="l122"><span class="ln">122  </span></a>        <span class="s1">}</span>
+<a name="l123"><span class="ln">123  </span></a>    <span class="s1">}</span>
+<a name="l124"><span class="ln">124  </span></a>
+<a name="l125"><span class="ln">125  </span></a>    <span class="s1">@Override</span>
+<a name="l126"><span class="ln">126  </span></a>    <span class="s0">public void </span><span class="s1">onRequestPermissionsResult(</span><span class="s0">int </span><span class="s1">requestCode</span><span class="s0">, </span><span class="s1">@NonNull String[] permissions</span><span class="s0">, </span><span class="s1">@NonNull </span><span class="s0">int</span><span class="s1">[] grantResults) {</span>
+<a name="l127"><span class="ln">127  </span></a>        <span class="s0">switch </span><span class="s1">(requestCode)</span>
+<a name="l128"><span class="ln">128  </span></a>        <span class="s1">{</span>
+<a name="l129"><span class="ln">129  </span></a>            <span class="s0">case </span><span class="s1">Request_User_Location__Code:</span>
+<a name="l130"><span class="ln">130  </span></a>                <span class="s0">if</span><span class="s1">(grantResults.length&gt;</span><span class="s2">0</span><span class="s1">&amp;&amp;grantResults[</span><span class="s2">0</span><span class="s1">]==PackageManager.PERMISSION_GRANTED)</span>
+<a name="l131"><span class="ln">131  </span></a>                <span class="s1">{</span>
+<a name="l132"><span class="ln">132  </span></a>                           <span class="s0">if</span><span class="s1">(ContextCompat.checkSelfPermission(</span><span class="s0">this,</span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)</span>
+<a name="l133"><span class="ln">133  </span></a>                           <span class="s1">{</span>
+<a name="l134"><span class="ln">134  </span></a>                               <span class="s0">if</span><span class="s1">(googleApiClient==</span><span class="s0">null</span><span class="s1">)</span>
+<a name="l135"><span class="ln">135  </span></a>                               <span class="s1">{</span>
+<a name="l136"><span class="ln">136  </span></a>                                   <span class="s1">buildGoogleApiClient()</span><span class="s0">;</span>
+<a name="l137"><span class="ln">137  </span></a>                               <span class="s1">}</span>
+<a name="l138"><span class="ln">138  </span></a>                               <span class="s1">mMap.setMyLocationEnabled(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l139"><span class="ln">139  </span></a>                           <span class="s1">}</span>
+<a name="l140"><span class="ln">140  </span></a>                <span class="s1">}</span>
+<a name="l141"><span class="ln">141  </span></a>                <span class="s0">else</span>
+<a name="l142"><span class="ln">142  </span></a>                <span class="s1">{</span>
+<a name="l143"><span class="ln">143  </span></a>                    <span class="s1">Toast.makeText(</span><span class="s0">this,</span><span class="s4">&quot;Permission Denied...&quot;</span><span class="s0">,</span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+<a name="l144"><span class="ln">144  </span></a>                <span class="s1">}</span>
+<a name="l145"><span class="ln">145  </span></a>                <span class="s0">return;</span>
+<a name="l146"><span class="ln">146  </span></a>        <span class="s1">}</span>
+<a name="l147"><span class="ln">147  </span></a>    <span class="s1">}</span>
+<a name="l148"><span class="ln">148  </span></a>
+<a name="l149"><span class="ln">149  </span></a>    <span class="s0">protected synchronized void </span><span class="s1">buildGoogleApiClient() {</span>
+<a name="l150"><span class="ln">150  </span></a>        <span class="s1">googleApiClient = </span><span class="s0">new </span><span class="s1">GoogleApiClient.Builder(</span><span class="s0">this</span><span class="s1">)</span>
+<a name="l151"><span class="ln">151  </span></a>                <span class="s1">.addConnectionCallbacks(</span><span class="s0">this</span><span class="s1">)</span>
+<a name="l152"><span class="ln">152  </span></a>                <span class="s1">.addOnConnectionFailedListener(</span><span class="s0">this</span><span class="s1">)</span>
+<a name="l153"><span class="ln">153  </span></a>                <span class="s1">.addApi(LocationServices.API)</span>
+<a name="l154"><span class="ln">154  </span></a>                <span class="s1">.build()</span><span class="s0">;</span>
+<a name="l155"><span class="ln">155  </span></a>        <span class="s1">googleApiClient.connect()</span><span class="s0">;</span>
+<a name="l156"><span class="ln">156  </span></a>    <span class="s1">}</span>
+<a name="l157"><span class="ln">157  </span></a>
+<a name="l158"><span class="ln">158  </span></a>
+<a name="l159"><span class="ln">159  </span></a>
+<a name="l160"><span class="ln">160  </span></a>    <span class="s1">@Override</span>
+<a name="l161"><span class="ln">161  </span></a>    <span class="s0">public void </span><span class="s1">onLocationChanged(@NonNull Location location) {</span>
+<a name="l162"><span class="ln">162  </span></a>
+<a name="l163"><span class="ln">163  </span></a>        <span class="s1">latitude=location.getLatitude()</span><span class="s0">;</span>
+<a name="l164"><span class="ln">164  </span></a>        <span class="s1">longitude=location.getLongitude()</span><span class="s0">;</span>
+<a name="l165"><span class="ln">165  </span></a>         <span class="s1">lastLocation=location</span><span class="s0">;</span>
+<a name="l166"><span class="ln">166  </span></a>         <span class="s0">if</span><span class="s1">(currentUserLocationMarker!=</span><span class="s0">null</span><span class="s1">)</span>
+<a name="l167"><span class="ln">167  </span></a>         <span class="s1">{</span>
+<a name="l168"><span class="ln">168  </span></a>             <span class="s1">currentUserLocationMarker.remove()</span><span class="s0">;</span>
+<a name="l169"><span class="ln">169  </span></a>         <span class="s1">}</span>
+<a name="l170"><span class="ln">170  </span></a>         <span class="s1">LatLng latLng=</span><span class="s0">new </span><span class="s1">LatLng(location.getLatitude()</span><span class="s0">,</span><span class="s1">location.getLongitude())</span><span class="s0">;</span>
+<a name="l171"><span class="ln">171  </span></a>         <span class="s1">MarkerOptions markerOptions=</span><span class="s0">new </span><span class="s1">MarkerOptions()</span><span class="s0">;</span>
+<a name="l172"><span class="ln">172  </span></a>         <span class="s1">markerOptions.position(latLng)</span><span class="s0">;</span>
+<a name="l173"><span class="ln">173  </span></a>         <span class="s1">markerOptions.title(</span><span class="s4">&quot;Your Current Location&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l174"><span class="ln">174  </span></a>         <span class="s1">markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))</span><span class="s0">;</span>
+<a name="l175"><span class="ln">175  </span></a>         <span class="s1">currentUserLocationMarker=mMap.addMarker(markerOptions)</span><span class="s0">;</span>
+<a name="l176"><span class="ln">176  </span></a>         <span class="s1">mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))</span><span class="s0">;</span>
+<a name="l177"><span class="ln">177  </span></a>         <span class="s1">mMap.animateCamera(CameraUpdateFactory.zoomBy(</span><span class="s2">12</span><span class="s1">))</span><span class="s0">;</span>
+<a name="l178"><span class="ln">178  </span></a>         <span class="s0">if</span><span class="s1">(googleApiClient!=</span><span class="s0">null</span><span class="s1">)</span>
+<a name="l179"><span class="ln">179  </span></a>         <span class="s1">{</span>
+<a name="l180"><span class="ln">180  </span></a>             <span class="s1">LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient</span><span class="s0">,this</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l181"><span class="ln">181  </span></a>         <span class="s1">}</span>
+<a name="l182"><span class="ln">182  </span></a>    <span class="s1">}</span>
+<a name="l183"><span class="ln">183  </span></a>
+<a name="l184"><span class="ln">184  </span></a>
+<a name="l185"><span class="ln">185  </span></a>
+<a name="l186"><span class="ln">186  </span></a>    <span class="s1">@Override</span>
+<a name="l187"><span class="ln">187  </span></a>    <span class="s0">public void </span><span class="s1">onConnected(@Nullable Bundle bundle) {</span>
+<a name="l188"><span class="ln">188  </span></a>       <span class="s1">locationRequest=</span><span class="s0">new </span><span class="s1">LocationRequest()</span><span class="s0">;</span>
+<a name="l189"><span class="ln">189  </span></a>       <span class="s1">locationRequest.setInterval(</span><span class="s2">1100</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l190"><span class="ln">190  </span></a>       <span class="s1">locationRequest.setFastestInterval(</span><span class="s2">1100</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l191"><span class="ln">191  </span></a>       <span class="s1">locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)</span><span class="s0">;</span>
+<a name="l192"><span class="ln">192  </span></a>       <span class="s0">if</span><span class="s1">(ContextCompat.checkSelfPermission(</span><span class="s0">this,</span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)</span>
+<a name="l193"><span class="ln">193  </span></a>       <span class="s1">{</span>
+<a name="l194"><span class="ln">194  </span></a>           <span class="s1">LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient</span><span class="s0">,</span><span class="s1">locationRequest</span><span class="s0">,this</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l195"><span class="ln">195  </span></a>       <span class="s1">}</span>
+<a name="l196"><span class="ln">196  </span></a>
+<a name="l197"><span class="ln">197  </span></a>    <span class="s1">}</span>
+<a name="l198"><span class="ln">198  </span></a>
+<a name="l199"><span class="ln">199  </span></a>    <span class="s1">@Override</span>
+<a name="l200"><span class="ln">200  </span></a>    <span class="s0">public void </span><span class="s1">onConnectionSuspended(</span><span class="s0">int </span><span class="s1">i) {</span>
+<a name="l201"><span class="ln">201  </span></a>
+<a name="l202"><span class="ln">202  </span></a>    <span class="s1">}</span>
+<a name="l203"><span class="ln">203  </span></a>
+<a name="l204"><span class="ln">204  </span></a>    <span class="s1">@Override</span>
+<a name="l205"><span class="ln">205  </span></a>    <span class="s0">public void </span><span class="s1">onConnectionFailed(@NonNull ConnectionResult connectionResult) {</span>
+<a name="l206"><span class="ln">206  </span></a>
+<a name="l207"><span class="ln">207  </span></a>    <span class="s1">}</span>
+<a name="l208"><span class="ln">208  </span></a><span class="s1">}</span></pre>
+</body>
+</html>
